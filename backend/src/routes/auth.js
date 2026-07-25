@@ -14,9 +14,8 @@ function signToken(userId) {
 // POST /api/auth/register
 router.post("/register", async (req, res) => {
   try {
-        const { name, email, password } = req.body;
+    const { name, email, password } = req.body;
 
-    // Reject non-string inputs (blocks NoSQL operator injection like {$gt:""})
     if (typeof name !== "string" || typeof email !== "string" || typeof password !== "string") {
       return res.status(400).json({ error: "Name, email and password are required" });
     }
@@ -36,13 +35,18 @@ router.post("/register", async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
     const user = await User.create({ name, email: cleanEmail, passwordHash });
+
+    const token = signToken(user._id);
+    res.status(201).json({
+      token,
+      user: { id: user._id, name: user.name, email: user.email },
+    });
   } catch (err) {
     console.error("Register error:", err.message);
     res.status(500).json({ error: "Something went wrong" });
   }
 });
 
-// POST /api/auth/login
 // POST /api/auth/login
 router.post("/login", async (req, res) => {
   try {
