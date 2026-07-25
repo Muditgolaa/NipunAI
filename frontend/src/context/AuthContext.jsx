@@ -32,6 +32,11 @@ export function AuthProvider({ children }) {
     saveAuth(data);
   }
 
+  async function loginWithGoogle(credential) {
+    const data = await api.post("/api/auth/google", { credential });
+    saveAuth(data);
+  }
+
   function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -39,7 +44,7 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
-  const value = { token, user, isAuthenticated: !!token, login, register, logout };
+  const value = { token, user, isAuthenticated: !!token, login, register, loginWithGoogle, logout };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
