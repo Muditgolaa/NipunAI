@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
+import Logo from "../components/Logo";
 
 export default function Report() {
   const { id } = useParams();
