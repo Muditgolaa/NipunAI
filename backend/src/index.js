@@ -2,21 +2,23 @@ import "dotenv/config";        // loads variables from .env into process.env
 import express from "express";
 import cors from "cors";
 import { connectDB } from "./config/db.js";
+import authRoutes from "./routes/auth.js";
 
 const app = express();
 
-// --- Middleware (runs on every request, in order) ---
+// Middleware (runs on every req) 
 app.use(cors({ origin: process.env.CLIENT_URL }));  // allow the React app to call us
 app.use(express.json());                            // parse JSON request bodies into req.body
 
-// --- Routes ---
-// A simple health check to confirm the server is running.
+//simple health check
 app.get("/health", (req, res) => {
   res.json({ status: "ok", message: "NipunAI backend is running 🚀" });
 });
 
-// --- Start the server ---
-const PORT = process.env.PORT || 5000;
+app.use("/api/auth", authRoutes);
+
+// Start the server 
+const PORT = process.env.PORT || 5001;
 
 connectDB().then(() => {
   app.listen(PORT, () => {
