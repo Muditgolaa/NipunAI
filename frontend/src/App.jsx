@@ -2,25 +2,20 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import NewSession from "./pages/NewSession";
+import Session from "./pages/Session";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   return (
     <Routes>
-      {/* Root sends you to the dashboard (which redirects to login if not authed) */}
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
-
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/sessions/new" element={<ProtectedRoute><NewSession /></ProtectedRoute>} />
+      <Route path="/sessions/:id" element={<ProtectedRoute><Session /></ProtectedRoute>} />
     </Routes>
   );
 }

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Dashboard() {
@@ -14,9 +15,13 @@ export default function Dashboard() {
 
       <div className="neu mt-8 max-w-2xl p-8">
         <h2 className="text-xl font-semibold text-navy">Welcome, {user?.name} 👋</h2>
-        <p className="mt-2 text-muted">
-          Your dashboard is coming next — session history and analytics will live here.
-        </p>
+        <p className="mt-2 text-muted">Ready to practice? Start a new interview session.</p>
+        <Link
+          to="/sessions/new"
+          className="neu-btn-primary mt-6 inline-block px-8 py-3 font-medium"
+        >
+          + New session
+        </Link>
       </div>
     </div>
   );

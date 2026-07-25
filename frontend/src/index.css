@@ -1,6 +1,7 @@
 @import "tailwindcss";
+@source "./**/*.{js,jsx}";
 
-/* --- Theme colors (Tailwind v4 exposes these as bg-*, text-*, etc. classes) --- */
+/* --- Theme colors --- */
 @theme {
   --color-base: #e8ecf3;      /* app background / surface */
   --color-navy: #26386f;      /* primary accent */
