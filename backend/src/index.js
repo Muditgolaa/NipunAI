@@ -4,6 +4,7 @@ import cors from "cors";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import sessionRoutes from "./routes/sessions.js";
+import questionRoutes from "./routes/questions.js"; 
 
 const app = express();
 
@@ -13,11 +14,12 @@ app.use(express.json());                            // parse JSON request bodies
 
 //simple health check
 app.get("/health", (req, res) => {
-  res.json({ status: "ok", message: "NipunAI backend is running 🚀" });
+    res.json({ status: "ok", message: "NipunAI backend is running 🚀" });
 });
 
 app.use("/api/auth", authRoutes);
 app.use("/api/sessions", sessionRoutes); 
+app.use("/api/questions", questionRoutes);
 
 // Start the server 
 const PORT = process.env.PORT || 5001;

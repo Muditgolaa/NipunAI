@@ -97,6 +97,35 @@ router.get("/:id/questions", async (req, res) => {
   res.json({ questions });
 });
 
+// GET /api/sessions/:id/report  — full graded session: questions + answers + stats
+router.get("/:id/report", async (req, res) => {
+  const session = await Session.findOne({ _id: req.params.id, userId: req.userId });
+  if (!session) return res.status(404).json({ error: "Session not found" });
+
+  const questions = await Question.find({ sessionId: session._id }).sort({ order: 1 });
+  const answers = await Answer.find({ sessionId: session._id });
+
+  // Pair each question with its answer (or null if unanswered).
+  const items = questions.map((q) => {
+    const answer = answers.find(
+      (a) => a.questionId.toString() === q._id.toString()
+    );
+    return { question: q, answer: answer || null };
+  });
+
+  // Average score across graded answers.
+  const scored = answers.filter((a) => a.score !== null);
+  const avgScore = scored.length
+    ? Math.round(scored.reduce((sum, a) => sum + a.score, 0) / scored.length)
+    : null;
+
+  res.json({
+    session,
+    items,
+    stats: { answered: answers.length, total: session.questionCount, avgScore },
+  });
+});
+
 // DELETE /api/sessions/:id  — delete a session and its questions + answers
 router.delete("/:id", async (req, res) => {
   const session = await Session.findOneAndDelete({ _id: req.params.id, userId: req.userId });
