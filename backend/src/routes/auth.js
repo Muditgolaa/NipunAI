@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import { requireAuth } from "../middleware/auth.js";
+import { OAuth2Client } from "google-auth-library";
 
 const router = express.Router();
 
@@ -10,6 +11,8 @@ const router = express.Router();
 function signToken(userId) {
   return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
 }
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // POST /api/auth/register
 router.post("/register", async (req, res) => {
@@ -80,6 +83,48 @@ router.get("/me", requireAuth, async (req, res) => {
   const user = await User.findById(req.userId).select("name email createdAt");
   if (!user) return res.status(404).json({ error: "User not found" });
   res.json({ user });
+});
+
+// POST /api/auth/google — verify Google's ID token, find-or-create user, issue OUR JWT
+router.post("/google", async (req, res) => {
+  try {
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({ error: "Missing Google credential" });
+    }
+
+    // Verify token really came from Google AND was issued on app.
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload(); // { sub, email, name}
+    const googleId = payload.sub;
+    const email = payload.email.toLowerCase();
+    const name = payload.name || email.split("@")[0];
+
+    // Find by googleId → else by email → else create.
+    let user = await User.findOne({ googleId });
+    if (!user) {
+      user = await User.findOne({ email });
+      if (user) {
+        user.googleId = googleId; // existing user links Google
+        await user.save();
+      } else {
+        user = await User.create({ name, email, googleId });
+      }
+    }
+
+    // Still issue JWT — the rest of the app unchanged.
+    const token = signToken(user._id);
+    res.json({
+      token,
+      user: { id: user._id, name: user.name, email: user.email },
+    });
+  } catch (err) {
+    console.error("Google auth error:", err.message);
+    res.status(401).json({ error: "Google sign-in failed" });
+  }
 });
 
 export default router;
