@@ -5,6 +5,7 @@ import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import sessionRoutes from "./routes/sessions.js";
 import questionRoutes from "./routes/questions.js"; 
+import analyticsRoutes from "./routes/analytics.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/sessions", sessionRoutes); 
 app.use("/api/questions", questionRoutes);
+app.use("/api/analytics", analyticsRoutes); 
 
 // Start the server 
 const PORT = process.env.PORT || 5001;
