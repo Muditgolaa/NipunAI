@@ -23,6 +23,18 @@ app.use("/api/sessions", sessionRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/analytics", analyticsRoutes); 
 
+// 404 for unknown routes
+app.use((req, res) => res.status(404).json({ error: "Not found" }));
+
+// Central error handler (Express 5 auto-forwards async errors here)
+app.use((err, req, res, next) => {
+  if (err.name === "CastError") {
+    return res.status(400).json({ error: "Invalid ID" });
+  }
+  console.error("Unhandled error:", err.message);
+  res.status(500).json({ error: "Something went wrong" });
+});
+
 // Start the server 
 const PORT = process.env.PORT || 5001;
 

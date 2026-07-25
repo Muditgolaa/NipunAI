@@ -1,7 +1,6 @@
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "llama-3.3-70b-versatile";
 
-// Shared helper: sends a prompt to Groq and returns parsed JSON.
 async function callGroq(prompt, temperature) {
   const res = await fetch(GROQ_URL, {
     method: "POST",
@@ -12,7 +11,7 @@ async function callGroq(prompt, temperature) {
     body: JSON.stringify({
       model: MODEL,
       temperature,
-      response_format: { type: "json_object" }, // force pure JSON output
+      response_format: { type: "json_object" },
       messages: [{ role: "user", content: prompt }],
     }),
   });
@@ -24,12 +23,12 @@ async function callGroq(prompt, temperature) {
 
   const data = await res.json();
   const content = data.choices[0].message.content;
-  return JSON.parse(content); // safe because response_format guarantees JSON
+  return JSON.parse(content);
 }
 
-// 1) Generate 8 role-specific questions. Temperature 0.7 → some variety is good.
+
 export async function generateQuestions({ jobTitle, company, jobDescription }) {
-  const prompt = `You are an expert technical interviewer.
+  const prompt = `You are an expert interviewer.
 Generate exactly 8 interview questions for this role.
 Title: ${jobTitle}
 Company: ${company}
@@ -44,22 +43,31 @@ Return ONLY JSON in this exact shape:
   return result.questions;
 }
 
-// 2) Score one answer. Temperature 0.2 → consistency matters (same answer ≈ same score).
+
 export async function evaluateAnswer({ question, answer }) {
-  const prompt = `You are scoring a candidate's interview answer from 0 to 100.
-Rubric:
-- Correctness & depth: 40%
-- Clarity & structure: 30%
-- Practical examples: 30%
+    const prompt = `You are a fair but discerning interview evaluator. Score the answer from 0 to 100.
+
+Judge by what the question calls for:
+- Technical questions: accuracy, depth, correct reasoning.
+- Behavioral/situational questions: relevant real experience, clear structure (situation → action → result), sound judgment. Do NOT require technical content for these.
+
+Rubric: Relevance & substance 40% | Clarity & structure 30% | Specific detail/examples 30%.
+
+Scoring scale:
+- 0-20: empty, off-topic, or generic filler that echoes rubric words without real content.
+- 30-50: on-topic but vague or shallow.
+- 60-79: solid, clear, relevant answer with some specifics.
+- 80-100: excellent — specific, well-structured, complete.
+
+Reward genuinely good answers. Only score below 30 for vague, off-topic, or filler answers.
 
 Question: ${question}
-Answer: ${answer}
+Candidate's answer: ${answer}
 
-Return ONLY JSON: { "score": <integer 0-100>, "feedback": "2-3 sentences of specific, constructive feedback" }`;
+Return ONLY JSON: { "score": <integer 0-100>, "feedback": "1-2 sentences referencing what the answer actually said, plus one concrete way to improve and giving them ans in 1-2 lines" }`;
 
   const result = await callGroq(prompt, 0.2);
 
-  // Clamp defensively — never trust the model to stay in range.
   const score = Math.min(100, Math.max(0, Math.round(result.score)));
   return { score, feedback: result.feedback };
 }

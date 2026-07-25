@@ -16,7 +16,10 @@ export default function Report() {
       <div className="mx-auto max-w-3xl">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-navy">Session report</h1>
+          <div className="flex items-center gap-3">
+            <Logo size={36} />
+            <h1 className="text-2xl font-bold text-navy">Session report</h1>
+          </div>
           <button
             onClick={() => navigate("/dashboard")}
             className="neu-btn px-5 py-2 text-sm font-medium"

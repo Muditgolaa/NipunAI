@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Logo from "../components/Logo";
 
 export default function Login() {
   const { login } = useAuth();
@@ -27,6 +28,9 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="neu w-full max-w-md p-8">
+        <div className="flex justify-center mb-4">
+          <Logo size={52} />
+        </div>
         <h1 className="text-3xl font-bold text-navy text-center">Welcome back</h1>
         <p className="mt-1 text-center text-muted">Log in to NipunAI</p>
 
