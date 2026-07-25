@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema(
       lowercase: true,   // store emails in lowercase for consistent lookups
       trim: true,
     },
-    passwordHash: { type: String, required: true },
+    passwordHash: { type: String }, // optional — Google users have none
+    googleId: { type: String, unique: true, sparse: true }, // set only for Google users
   },
   { timestamps: true }   // auto-adds createdAt and updatedAt fields
 );
