@@ -7,6 +7,14 @@ import sessionRoutes from "./routes/sessions.js";
 import questionRoutes from "./routes/questions.js"; 
 import analyticsRoutes from "./routes/analytics.js";
 
+// Refuse to start if a critical secret is missing (fail loud, not silent).
+for (const key of ["MONGODB_URI", "JWT_SECRET", "GROQ_API_KEY", "CLIENT_URL"]) {
+  if (!process.env[key]) {
+    console.error(`❌ Missing required env var: ${key} — set it before starting.`);
+    process.exit(1);
+  }
+}
+
 const app = express();
 
 // Middleware (runs on every req) 
