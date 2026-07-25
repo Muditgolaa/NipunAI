@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useFetch } from "../hooks/useFetch";
 import { api } from "../api/client";
+import Logo from "../components/Logo";
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
@@ -27,9 +28,12 @@ export default function Dashboard() {
       <div className="mx-auto max-w-4xl">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-navy">NipunAI</h1>
-            <p className="text-muted">Welcome back, {user?.name} 👋</p>
+          <div className="flex items-center gap-3">
+            <Logo size={40} />
+            <div>
+              <h1 className="text-2xl font-bold text-navy">NipunAI</h1>
+              <p className="text-muted">Welcome back, {user?.name} 👋</p>
+            </div>
           </div>
           <button onClick={logout} className="neu-btn px-5 py-2 text-sm font-medium">
             Log out

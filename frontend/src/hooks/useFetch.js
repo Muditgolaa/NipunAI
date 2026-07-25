@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../api/client";
 
-// Generic GET hook: returns { data, loading, error, refetch }.
 export function useFetch(path) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,7 +20,6 @@ export function useFetch(path) {
 
   useEffect(() => {
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path]);
 
   return { data, loading, error, refetch: load };

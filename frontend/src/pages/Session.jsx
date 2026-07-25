@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { api } from "../api/client";
 import { useFetch } from "../hooks/useFetch";
+import Logo from "../components/Logo";
 
 export default function Session() {
   const { id } = useParams();
@@ -91,6 +92,10 @@ export default function Session() {
   return (
     <div className="min-h-screen p-6 md:p-10">
       <div className="mx-auto max-w-2xl">
+        <div className="mb-4 flex justify-center">
+            <Logo size={32} />
+            <h1 class="text-2xl font-bold text-navy">NipunAI</h1>
+        </div>
         {/* Progress + timer */}
         <div className="flex items-center justify-between">
           <span className="neu-inset rounded-full px-4 py-2 text-sm font-medium text-navy">

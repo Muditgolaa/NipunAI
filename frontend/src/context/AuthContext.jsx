@@ -7,9 +7,12 @@ export function AuthProvider({ children }) {
   // Initialise from localStorage so login survives a page refresh.
   const [token, setToken] = useState(() => localStorage.getItem("token"));
   const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem("user");
-    return stored ? JSON.parse(stored) : null;
-  });
+    try {
+      return JSON.parse(localStorage.getItem("user")) || null;
+    } catch {
+      return null;
+    }
+  })
 
   // Save auth data to both state and localStorage.
   function saveAuth(data) {
