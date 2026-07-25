@@ -1,1 +1,66 @@
 @import "tailwindcss";
+
+/* --- Theme colors (Tailwind v4 exposes these as bg-*, text-*, etc. classes) --- */
+@theme {
+  --color-base: #e8ecf3;      /* app background / surface */
+  --color-navy: #26386f;      /* primary accent */
+  --color-navy-dark: #1b2a55;
+  --color-ink: #2c3555;       /* main text */
+  --color-muted: #8b95ad;     /* secondary text */
+}
+
+body {
+  background-color: var(--color-base);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Neumorphic kit --- */
+
+/* Raised card/surface */
+.neu {
+  background: var(--color-base);
+  border-radius: 1.25rem;
+  box-shadow: -6px -6px 12px #ffffff, 6px 6px 14px #c3ccdd;
+}
+
+/* Pressed / inset panel (good for readouts, inputs) */
+.neu-inset {
+  background: var(--color-base);
+  border-radius: 1rem;
+  box-shadow: inset -4px -4px 8px #ffffff, inset 4px 4px 8px #c3ccdd;
+}
+
+/* Neutral pill button */
+.neu-btn {
+  background: var(--color-base);
+  border-radius: 9999px;
+  color: var(--color-navy);
+  box-shadow: -5px -5px 10px #ffffff, 5px 5px 10px #c3ccdd;
+  transition: box-shadow 0.15s ease, transform 0.05s ease;
+  cursor: pointer;
+}
+.neu-btn:hover  { box-shadow: -3px -3px 7px #ffffff, 3px 3px 7px #c3ccdd; }
+.neu-btn:active { box-shadow: inset -3px -3px 7px #ffffff, inset 3px 3px 7px #c3ccdd; }
+
+/* Primary (navy) pill button */
+.neu-btn-primary {
+  background: var(--color-navy);
+  color: #fff;
+  border-radius: 9999px;
+  box-shadow: -5px -5px 10px #ffffff, 6px 6px 14px #b3bdd4;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+.neu-btn-primary:hover  { background: var(--color-navy-dark); }
+.neu-btn-primary:active { box-shadow: inset 3px 3px 8px #0f183a; }
+
+/* Inset text input */
+.neu-input {
+  background: var(--color-base);
+  border-radius: 9999px;
+  color: var(--color-ink);
+  box-shadow: inset -3px -3px 6px #ffffff, inset 3px 3px 6px #c3ccdd;
+  outline: none;
+}
+.neu-input::placeholder { color: var(--color-muted); }

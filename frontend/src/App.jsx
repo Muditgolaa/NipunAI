@@ -1,29 +1,36 @@
-import { Routes, Route, Link } from "react-router-dom";
-
-function Home() {
-  return <p className="text-slate-300">🏠 Home page — routing works.</p>;
-}
-
-function About() {
-  return <p className="text-slate-300">ℹ️ About page — routing works.</p>;
-}
+import { useAuth } from "./context/AuthContext";
 
 export default function App() {
+  const { user, isAuthenticated, login, logout } = useAuth();
+
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-8">
-      <h1 className="text-4xl font-bold text-indigo-400">NipunAI</h1>
-      <p className="mt-2 text-slate-400">Frontend scaffold is alive 🚀</p>
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="neu w-full max-w-md p-8 text-center">
+        <h1 className="text-3xl font-bold text-navy">NipunAI</h1>
+        <p className="mt-1 text-muted">Your AI Interview Coach</p>
 
-      <nav className="mt-6 flex gap-4">
-        <Link className="text-indigo-400 hover:underline" to="/">Home</Link>
-        <Link className="text-indigo-400 hover:underline" to="/about">About</Link>
-      </nav>
-
-      <div className="mt-6 rounded-lg border border-slate-700 bg-slate-800 p-4">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-        </Routes>
+        {isAuthenticated ? (
+          <div className="mt-8">
+            <div className="neu-inset px-4 py-3">
+              ✅ Logged in as <span className="font-semibold text-navy">{user.email}</span>
+            </div>
+            <button onClick={logout} className="neu-btn mt-6 px-8 py-3 font-medium">
+              Log out
+            </button>
+          </div>
+        ) : (
+          <div className="mt-8">
+            <p className="text-muted">Not logged in.</p>
+            <button
+              onClick={() =>
+                login("mudit@test.com", "secret123").catch((e) => alert(e.message))
+              }
+              className="neu-btn-primary mt-6 px-10 py-3 font-medium"
+            >
+              Test login
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
