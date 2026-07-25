@@ -64,7 +64,7 @@ export default function Login() {
           </button>
         </form>
 
-                <div className="mt-6 flex items-center gap-3 text-xs text-muted">
+        <div className="mt-6 flex items-center gap-3 text-xs text-muted">
           <span className="h-px flex-1 bg-slate-300" /> or <span className="h-px flex-1 bg-slate-300" />
         </div>
 

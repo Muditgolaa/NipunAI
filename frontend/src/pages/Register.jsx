@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Logo from "../components/Logo";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function Register() {
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -71,6 +72,24 @@ export default function Register() {
             {loading ? "Creating..." : "Sign up"}
           </button>
         </form>
+
+                <div className="mt-6 flex items-center gap-3 text-xs text-muted">
+          <span className="h-px flex-1 bg-slate-300" /> or <span className="h-px flex-1 bg-slate-300" />
+        </div>
+
+        <div className="mt-4 flex justify-center">
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              try {
+                await loginWithGoogle(credentialResponse.credential);
+                navigate("/dashboard");
+              } catch (err) {
+                setError(err.message);
+              }
+            }}
+            onError={() => setError("Google sign-in failed")}
+          />
+        </div>
 
         <p className="mt-6 text-center text-sm text-muted">
           Already have an account?{" "}
